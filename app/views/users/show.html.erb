@@ -1,0 +1,6 @@
+<h1><%= @user.name %></h1>
+<h2>@<%= @user.username %></h2>
+<p><%= link_to "Edit Profile", edit_user_path %></p>
+<%= form_with model: @user, url: user_path(username: @user.username), method: :delete, local: true do |f| %>
+  <%= f.submit "Delete Account" %>
+<% end %>
