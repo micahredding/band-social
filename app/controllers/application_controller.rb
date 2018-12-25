@@ -1,12 +1,7 @@
 class ApplicationController < ActionController::Base
-  before_action :set_errors, :set_logged_in_user
-
+  before_action :set_messages, :set_logged_in_user
 
   def welcome
-  end
-
-  def set_logged_in_user
-    !!session[:user_id] ? @logged_in_user = User.find(session[:user_id]) : @logged_in_user = nil
   end
 
   def login(user)
@@ -19,17 +14,17 @@ class ApplicationController < ActionController::Base
   end
 
   def authorized?(user, permitted_roles)
-    !!user && permitted_roles.include?(user.role)
-  end
-
-  def custom_error(message)
-    flash[:errors] ||= []
-    flash[:errors] << message
+    permitted_roles.include?(user.role)
   end
 
   private
 
-  def set_errors
+  def set_logged_in_user
+    !!session[:user_id] ? @logged_in_user = User.find(session[:user_id]) : @logged_in_user = nil
+  end
+
+  def set_messages
+    @success = flash[:success]
     @errors = flash[:errors]
   end
 end

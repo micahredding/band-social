@@ -1,4 +1,4 @@
 <p><%= @logged_in_user.name %></p>
-<%= form_with url: "/login", method: "delete" do |f| %>
+<%= form_with url: "/sessions/#{session.id}", method: "delete" do |f| %>
 <%= f.submit "Logout" %>
 <% end %>

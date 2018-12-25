@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_requested_user
+  before_action :set_requested_user, only: [:show, :edit, :update, :destroy]
 
   def new
     @user = User.new
@@ -9,19 +9,22 @@ class UsersController < ApplicationController
     @user = User.create(user_params)
 
     if !!@user.id
-      redirect_to user_path(@user.username)
+      login(@user)
+      redirect_to user_path(@user)
     else
-      handle_errors(@user)
+      flash.now[:errors] = @user.errors.full_messages
       render :new
     end
   end
 
-  def edit
-    # Set permissions
+  def show
     @permitted_roles = ["3", "4"]
-
     handle_auth
+  end
 
+  def edit
+    @permitted_roles = ["3", "4"]
+    handle_auth
     render :edit
   end
 
@@ -35,30 +38,27 @@ class UsersController < ApplicationController
     end
   end
 
-  def show
-    # Set permissions
-    @permitted_roles = ["1", "2", "3", "4"]
-    render :show
-  end
 
-  def delete
+  def destroy
     @permitted_roles = ["3", "4"]
-    @user.destroy
+    handle_auth
+    @requested_user.destroy
+    byebug
+    flash[:success] = "Destroyed"
+    reset_session
     redirect_to home_path
   end
 
   private
 
   def set_requested_user
-    @requested_user = User.find_by(username: params[:username])
-    if !@requested_use
-      custom_error("Invalid User")
+    if User.exists?(params[:id])
+      @requested_user = User.find(params[:id])
+    else
+      flash[:errors] ||= []
+      flash[:errors] << "Invalid User"
       redirect_to home_path
     end
-  end
-
-  def handle_errors(user)
-    flash[:errors] = user.errors.full_messages
   end
 
   def user_params
@@ -66,8 +66,9 @@ class UsersController < ApplicationController
   end
 
   def handle_auth
-    unless logged_in?(@user) || authorized?(@logged_in_user, @permitted_roles)
-      custom_error("Not Authorized!")
+    unless logged_in?(@requested_user) || authorized?(@logged_in_user, @permitted_roles)
+      flash[:errors] ||= []
+      flash[:errors] << "Not Authorized!"
       redirect_to home_path
     end
   end
