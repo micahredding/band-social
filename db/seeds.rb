@@ -8,7 +8,7 @@
 
 Band.destroy_all
 
-jms = Band.new(name: "Jams", description: "Hey, its our first band.", manager_id: User.all.sample.id)
+jms = Band.new(name: "Jams", description: "Hey, its our first band.", user_id: 1)
 if jms.save
   puts "Done"
 else
