@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :bands, class_name: 'Band', foreign_key: "manager", primary_key: 'id'
+  has_many :bands, class_name: 'Band', foreign_key: "manager_id", primary_key: 'id'
 
   validates_presence_of :name
   validates_presence_of :password_digest

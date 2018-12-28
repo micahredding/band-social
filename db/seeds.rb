@@ -8,9 +8,15 @@
 
 Band.destroy_all
 
-jms = Band.new(name: "Jams", description: "Hey, its our first band.", manager_id: User.all.sample.id)
-if jms.save
-  puts "Done"
+u = User.new(name: 'Admin', username: 'admin', password: 'password', password_digest: 'password')
+if u.save!
+  puts u.inspect
+else
+  puts "User Incomplete"
+end
+b = Band.new(name: "Jams", description: "Hey, its our first band.", manager: u)
+if b.save!
+  puts b.inspect
 else
   puts "Incomplete"
 end
