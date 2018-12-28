@@ -5,3 +5,8 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Band.destroy_all
+
+jms = Band.new(name: "Jams", description: "Hey, its our first band.", manager: User.all.sample)
+jms.save

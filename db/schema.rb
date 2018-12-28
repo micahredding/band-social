@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_24_035523) do
+ActiveRecord::Schema.define(version: 2018_12_27_040935) do
+
+  create_table "bands", force: :cascade do |t|
+    t.integer "manager_id"
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["manager_id"], name: "index_bands_on_manager_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
@@ -18,7 +27,7 @@ ActiveRecord::Schema.define(version: 2018_12_24_035523) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "role"
+    t.string "role", default: "user"
   end
 
 end

@@ -3,9 +3,12 @@
 ## Phase 1
 
 - Auth
-  - Sign Up
-  - Login
+  - ~~Sign Up~~
+  - ~~Login~~
+- User
+  - Create Band
 - Band
+  - Manager_id
   - Description
   - Member list
 - Member
@@ -26,6 +29,7 @@
   - ~~Login~~
   - Role permissions
 - Band
+  - ~~Manager~~
   - ~~Description~~
   - ~~Member list~~
   - Upcoming shows
@@ -55,4 +59,3 @@
   - Band thread
   - Venue admin with requestor
   - SMS notifications
-

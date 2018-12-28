@@ -1,7 +1,9 @@
 <h1><%= @requested_user.name %></h1>
 <h2>@<%= @requested_user.username %></h2>
 <h2>Role: <%= @requested_user.role %></h2>
-<p><%= link_to "Edit Profile", edit_user_path %></p>
-<%= form_with url: user_path(@requested_user), method: "delete", local: true do |f| %>
-  <%= f.submit "Delete Account"%>
+<% if @requested_user == @logged_in_user || @logged_in_user.admin? %>
+  <p><%= link_to "Edit Profile", edit_user_path %></p>
+  <%= form_with url: user_path(@requested_user), method: "delete", local: true do |f| %>
+    <%= f.submit "Delete Account"%>
+  <% end %>
 <% end %>

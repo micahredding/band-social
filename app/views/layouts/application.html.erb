@@ -11,8 +11,11 @@
   <body>
     <nav>
       <%= link_to "Home", home_path  %>
-      <% if !!@logged_in_user %>
-      <%= render "./layouts/logout" %>
+      <% if !@logged_in_user %>
+        <%= link_to "Login", new_session_path  %>
+        <%= link_to "Sign Up", new_user_path  %>
+      <% else %>
+        <%= render "./layouts/logout" %>
       <% end %>
     </nav>
     <%= render "./layouts/errors" %>

@@ -1,6 +1,12 @@
-<% if @errors %>
+<% if flash.now[:errors] %>
   <ul>
-    <% @errors.each do |error| %>
+    <% flash.now[:errors].each do |error| %>
+    <li><%= error %></li>
+    <% end %>
+  </ul>
+<% elsif flash[:errors] %>
+  <ul>
+    <% flash[:errors].each do |error| %>
     <li><%= error %></li>
     <% end %>
   </ul>

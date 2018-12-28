@@ -13,3 +13,15 @@
  *= require_tree .
  *= require_self
  */
+
+ .error, .success {
+   display: block;
+   width: 100vw;
+   height: 1vh;
+ }
+ .error {
+   background-color: #FF0000;
+ }
+ .success {
+   background-color: #00FF00;
+ }

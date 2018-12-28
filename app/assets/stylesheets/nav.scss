@@ -1,0 +1,24 @@
+nav {
+  a, a:visited {
+    text-decoration: none;
+    color: blue;
+    &:active {
+      color: black;
+    }
+  }
+  form {
+    display: inline-block;
+    input[type="submit"] {
+      display: inline;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      font: inherit;
+      background: 0;
+      color: blue;
+      &:active {
+        color: black;
+      }
+    }
+  }
+}

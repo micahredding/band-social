@@ -1,49 +1,47 @@
 class UsersController < ApplicationController
   before_action :set_requested_user, only: [:show, :edit, :update, :destroy]
+  before_action :require_auth, only: [:edit, :update, :destroy]
+
+  def show
+  end
+
+  def edit
+    @roles = ["user","admin"]
+  end
 
   def new
-    @user = User.new
+    @requested_user = User.new
+  end
+
+  def index
+    unless !!@logged_in_user
+      reject_auth
+    end
+    @users = User.all
   end
 
   def create
-    @user = User.create(user_params)
-
-    if !!@user.id
-      login(@user)
-      redirect_to user_path(@user)
+    @new_user = User.create(user_params)
+    if User.exists?(@new_user.id)
+      login(@new_user)
+      redirect_to user_path(@new_user)
     else
-      flash.now[:errors] = @user.errors.full_messages
+      flash.now[:errors] = @new_user.errors.full_messages
       render :new
     end
   end
 
-  def show
-    @permitted_roles = ["3", "4"]
-    handle_auth
-  end
-
-  def edit
-    @permitted_roles = ["3", "4"]
-    handle_auth
-    render :edit
-  end
-
   def update
-    @permitted_roles = ["3", "4"]
-    if @user.update(user_params)
-      redirect_to user_path(@user.username)
+    if @requested_user.update(user_params)
+      redirect_to user_path(@requested_user)
     else
-      handle_errors(@user)
+      flash.now[:errors] = @requested_user.errors.full_messages
       render :edit
     end
   end
 
-
   def destroy
-    @permitted_roles = ["3", "4"]
-    handle_auth
     @requested_user.destroy
-    byebug
     flash[:success] = "Destroyed"
     reset_session
     redirect_to home_path
@@ -52,24 +50,36 @@ class UsersController < ApplicationController
   private
 
   def set_requested_user
-    if User.exists?(params[:id])
+    if !!params[:id] && User.exists?(params[:id])
       @requested_user = User.find(params[:id])
     else
-      flash[:errors] ||= []
-      flash[:errors] << "Invalid User"
-      redirect_to home_path
+      add_error_message("Invalid User")
+      redirect_to users_path
     end
   end
 
   def user_params
-    params.require(:user).permit(:username, :name, :password)
+    if !!@logged_in_user && @logged_in_user.admin?
+      params.require(:user).permit(:username, :name, :password, :role)
+    else
+      params.require(:user).permit(:username, :name, :password)
+    end
   end
 
-  def handle_auth
-    unless logged_in?(@requested_user) || authorized?(@logged_in_user, @permitted_roles)
-      flash[:errors] ||= []
-      flash[:errors] << "Not Authorized!"
-      redirect_to home_path
+  def reject_auth
+    add_error_message("Not Authorized!")
+    redirect_to home_path
+  end
+
+  def require_auth
+    unless @requested_user == @logged_in_user || @logged_in_user.admin?
+      reject_auth
+    end
+  end
+
+  def require_admin_auth
+    unless @logged_in_user.admin?
+      reject_auth
     end
   end
 end

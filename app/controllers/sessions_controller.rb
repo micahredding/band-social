@@ -8,9 +8,13 @@ class SessionsController < ApplicationController
     if !!@user && @user.authenticate(params[:password])
       login(@user)
       redirect_to user_path(@user)
+    elsif !!@user
+      flash.now[:errors] ||= []
+      flash.now[:errors] << "Wrong password."
+      render :new
     else
       flash.now[:errors] ||= []
-      flash.now[:errors] << "Login failed"
+      flash.now[:errors] << "Invalid username."
       render :new
     end
   end

@@ -1,0 +1,22 @@
+<%= form_with model: @requested_user, local: true do |f| %>
+  <%= f.label :name %>
+  <br>
+  <%= f.text_field :name, required: true, autofocus: true  %>
+  <br>
+  <%= f.label :username %>
+  <br>
+  <%= f.text_field :username, required: true %>
+  <br>
+  <% if !!@logged_in_user && @logged_in_user == @requested_user %>
+    <%= f.label :password %>
+    <br>
+    <%= f.password_field :password, required: true %>
+    <br>
+  <% end %>
+  <% if !!@logged_in_user && @logged_in_user != @requested_user && @logged_in_user.admin? %>
+    <%= f.label :role %>
+    <%= f.collection_select :role, @roles, :to_s, :to_s %>
+    <br>
+  <% end %>
+  <%= f.submit %>
+<% end %>
